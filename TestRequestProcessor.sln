@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRequestProcessor.Core", "TestRequestProcessor.Core\TestRequestProcessor.Core.csproj", "{37C5789D-BAC7-4FAA-8CD2-393D2E709C34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRequestProcessor.Core.Tests", "TestRequestProcessor.Core.Tests\TestRequestProcessor.Core.Tests.csproj", "{1DA10F2C-2C55-4DE1-BEAD-E4F972C05CA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37C5789D-BAC7-4FAA-8CD2-393D2E709C34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37C5789D-BAC7-4FAA-8CD2-393D2E709C34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37C5789D-BAC7-4FAA-8CD2-393D2E709C34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37C5789D-BAC7-4FAA-8CD2-393D2E709C34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DA10F2C-2C55-4DE1-BEAD-E4F972C05CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DA10F2C-2C55-4DE1-BEAD-E4F972C05CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DA10F2C-2C55-4DE1-BEAD-E4F972C05CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DA10F2C-2C55-4DE1-BEAD-E4F972C05CA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4609C80-EC30-4722-BCEC-6A70DC8E40BD}
+	EndGlobalSection
+EndGlobal
