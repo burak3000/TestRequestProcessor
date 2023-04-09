@@ -26,7 +26,10 @@ namespace TestRequestProcessor.Core
             During(Processing,
                 When(CheckAvailabilityRequest.Completed)
                 .Then(ctx =>
-                Console.WriteLine("Availability status is: " + ctx.Message.IsAvailable))
+                {
+                    Console.WriteLine("Availability status is: " + ctx.Message.IsAvailable);
+                    ctx.Saga.IsAvailable = ctx.Message.IsAvailable;
+                })
                 .TransitionTo(Processed));
         }
 

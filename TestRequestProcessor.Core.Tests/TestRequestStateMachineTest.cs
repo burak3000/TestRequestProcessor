@@ -1,6 +1,7 @@
 using MassTransit;
 using MassTransit.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using TestRequestProcessor.Core.Dtos;
 
 namespace TestRequestProcessor.Core.Tests
@@ -15,13 +16,22 @@ namespace TestRequestProcessor.Core.Tests
         [Test]
         public async Task Test1()
         {
-            await using var provider = new ServiceCollection()
-                    .AddMassTransitTestHarness(cfg =>
-                    {
-                        cfg.AddConsumer<CheckAvailabilityConsumer>();
-                        cfg.AddSagaStateMachine<TestRequestStateMachine, TestRequestState>();
-                    })
-                    .BuildServiceProvider(true);
+            Mock<IAvailabilityChecker> availabilityCheckerMock = new Mock<IAvailabilityChecker>();
+            availabilityCheckerMock
+                .Setup(a => a.CheckAvailability(It.IsAny<CheckAvailabilityParameters>()))
+                .Returns(AvailabilityStatus.Available);
+
+            var serviceCollection = new ServiceCollection();
+
+            serviceCollection.AddMassTransitTestHarness(cfg =>
+            {
+                cfg.AddConsumer<CheckAvailabilityConsumer>();
+                cfg.AddSagaStateMachine<TestRequestStateMachine, TestRequestState>();
+            });
+            serviceCollection.AddScoped<IAvailabilityChecker>(ac => availabilityCheckerMock.Object);
+
+            await using var provider = serviceCollection.BuildServiceProvider(true);
+
             var harness = provider.GetRequiredService<ITestHarness>();
             await harness.Start();
             var sagaId = Guid.NewGuid();
@@ -33,10 +43,14 @@ namespace TestRequestProcessor.Core.Tests
             Assert.That(await sagaHarness.Consumed.Any<TestRequestDto>());
             Assert.That(await harness.Consumed.Any<CheckAvailabilityRequestDto>());
             Assert.That(await harness.Consumed.Any<CheckAvailabilityResponseDto>());
+            CheckAvailabilityResponseDto availabilityResponse = await harness.Consumed.SelectAsync(x => x.MessageType == typeof(CheckAvailabilityResponseDto)).First() as CheckAvailabilityResponseDto;
 
             Assert.That(await sagaHarness.Created.Any(x => x.CorrelationId == sagaId));
             var instance = sagaHarness.Created.ContainsInState(sagaId, sagaHarness.StateMachine, sagaHarness.StateMachine.Processed);
             Assert.IsNotNull(instance, "Saga instance not found");
+
+            availabilityCheckerMock.Verify(ac => ac.CheckAvailability(It.IsAny<CheckAvailabilityParameters>()), Times.Once);
+            Assert.That(instance.IsAvailable, Is.True);
         }
     }
 }

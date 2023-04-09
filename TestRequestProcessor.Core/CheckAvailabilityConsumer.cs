@@ -5,16 +5,17 @@ namespace TestRequestProcessor.Core
 {
     public class CheckAvailabilityConsumer : IConsumer<CheckAvailabilityRequestDto>
     {
+        private readonly IAvailabilityChecker _availabilityChecker;
         Random _random;
-        public CheckAvailabilityConsumer()
+        public CheckAvailabilityConsumer(IAvailabilityChecker availabilityChecker)
         {
             _random = new Random();
-
+            _availabilityChecker = availabilityChecker;
         }
         public async Task Consume(ConsumeContext<CheckAvailabilityRequestDto> context)
         {
-            bool isAvailable = _random.Next(0, 2) == 1;
-            await context.RespondAsync(new CheckAvailabilityResponseDto { IsAvailable = isAvailable });
+            AvailabilityStatus availabilityStatus = _availabilityChecker.CheckAvailability(new CheckAvailabilityParameters());
+            await context.RespondAsync(new CheckAvailabilityResponseDto { IsAvailable = availabilityStatus == AvailabilityStatus.Available });
         }
     }
 }
