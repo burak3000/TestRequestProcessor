@@ -43,7 +43,6 @@ namespace TestRequestProcessor.Core.Tests
             Assert.That(await sagaHarness.Consumed.Any<TestRequestDto>());
             Assert.That(await harness.Consumed.Any<CheckAvailabilityRequestDto>());
             Assert.That(await harness.Consumed.Any<CheckAvailabilityResponseDto>());
-            CheckAvailabilityResponseDto availabilityResponse = await harness.Consumed.SelectAsync(x => x.MessageType == typeof(CheckAvailabilityResponseDto)).First() as CheckAvailabilityResponseDto;
 
             Assert.That(await sagaHarness.Created.Any(x => x.CorrelationId == sagaId));
             var instance = sagaHarness.Created.ContainsInState(sagaId, sagaHarness.StateMachine, sagaHarness.StateMachine.Processed);
